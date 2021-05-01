@@ -1,0 +1,16 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "a simiple todo app",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app"
+  },
+  "author": "Shahin Bayat",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "localbase": "^0.7.5",
+    "nodemon": "^2.0.7"
+  }
+}
