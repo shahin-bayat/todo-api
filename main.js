@@ -1,4 +1,4 @@
-const db = new Localbase("db")
+import { createTodo, deleteTodo, getTodos, toggleTodo } from "./api"
 
 // SELECTORS
 const todoBtn = document.getElementById("todo-submit")
@@ -6,38 +6,6 @@ const todoInput = document.getElementById("todo-text")
 const todoAssignee = document.getElementById("todo-assignee")
 const todosList = document.getElementById("todos")
 const todosListDone = document.getElementById("todos-done")
-
-const getTodos = async function () {
-  // const todos = await db.collection("todos").orderBy("created_at", "desc").get()
-  const todos = await fetch("https://todo-api-migration.herokuapp.com/todo")
-  return todos
-}
-
-const createTodo = async function (text, assignee, status = "pending") {
-  const newTodo = {
-    text,
-    assignee,
-    status,
-    created_at: new Date().toLocaleString(),
-    id: new Date().getTime().toString(),
-  }
-  await db.collection("todos").add(newTodo)
-}
-
-const deleteTodo = async function (id) {
-  await db.collection("todos").doc({ id }).delete()
-  removeListElement()
-  fetchAndFillTodos()
-}
-
-const toggleTodo = async function (id) {
-  await db
-    .collection("todos")
-    .doc({ id })
-    .update({ status: "done", created_at: new Date().toLocaleString() })
-  removeListElement()
-  fetchAndFillTodos()
-}
 
 // DOM ACTIONS
 const removeListElement = function () {
@@ -48,7 +16,6 @@ const removeListElement = function () {
 
 const fetchAndFillTodos = async function () {
   const todos = await getTodos()
-  console.log(todos)
   todos.forEach(todo => {
     const todoEl = createTodoElement(todo)
 
