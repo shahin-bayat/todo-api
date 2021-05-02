@@ -1,11 +1,45 @@
-import { createTodo, deleteTodo, getTodos, toggleTodo } from "./api"
-
 // SELECTORS
 const todoBtn = document.getElementById("todo-submit")
 const todoInput = document.getElementById("todo-text")
 const todoAssignee = document.getElementById("todo-assignee")
 const todosList = document.getElementById("todos")
 const todosListDone = document.getElementById("todos-done")
+
+// API CALLS
+export const getTodos = async function () {
+  const data = await fetch("https://todo-api-migration.herokuapp.com/todo")
+  const todos = await data.json()
+  return todos
+}
+
+export const createTodo = async function (text, assignee, status = "pending") {
+  const newTodo = {
+    text,
+    assignee,
+    status,
+  }
+  await fetch("https://todo-api-migration.herokuapp.com/todo", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(newTodo),
+  })
+}
+
+export const deleteTodo = async function (id) {
+  await fetch(`https://todo-api-migration.herokuapp.com/todo/${id}`, {
+    method: "DELETE",
+  })
+}
+
+export const toggleTodo = async function (id, body) {
+  await fetch(`https://todo-api-migration.herokuapp.com/todo/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  })
+}
 
 // DOM ACTIONS
 const removeListElement = function () {
@@ -15,7 +49,9 @@ const removeListElement = function () {
 }
 
 const fetchAndFillTodos = async function () {
+  console.log(getTodos)
   const todos = await getTodos()
+  console.log(todos)
   todos.forEach(todo => {
     const todoEl = createTodoElement(todo)
 
@@ -35,7 +71,7 @@ const createTodoElement = function ({ text, status, assignee, id }) {
   const checkBox = document.createElement("input")
   checkBox.classList.add("ms-2")
   checkBox.setAttribute("type", "checkbox")
-  checkBox.addEventListener("change", () => toggleTodo(id))
+  checkBox.addEventListener("change", () => toggleTodo(id, { status: "done" }))
 
   const todoText = document.createElement("span")
   todoText.classList.add("flex-grow-1")
