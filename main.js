@@ -7,9 +7,9 @@ const todoAssignee = document.getElementById("todo-assignee")
 const todosList = document.getElementById("todos")
 const todosListDone = document.getElementById("todos-done")
 
-// DB Actions
 const getTodos = async function () {
-  const todos = await db.collection("todos").orderBy("created_at", "desc").get()
+  // const todos = await db.collection("todos").orderBy("created_at", "desc").get()
+  const todos = await fetch("https://todo-api-migration.herokuapp.com/todo")
   return todos
 }
 
@@ -48,6 +48,7 @@ const removeListElement = function () {
 
 const fetchAndFillTodos = async function () {
   const todos = await getTodos()
+  console.log(todos)
   todos.forEach(todo => {
     const todoEl = createTodoElement(todo)
 
