@@ -22,7 +22,6 @@ export const createTodo = async function (text, assignee, status = "pending") {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      // 'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: JSON.stringify(newTodo),
   })
@@ -37,6 +36,9 @@ export const deleteTodo = async function (id) {
 export const toggleTodo = async function (id, body) {
   await fetch(`https://todo-api-migration.herokuapp.com/todo/${id}`, {
     method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(body),
   })
 }
@@ -49,9 +51,8 @@ const removeListElement = function () {
 }
 
 const fetchAndFillTodos = async function () {
-  console.log(getTodos)
   const todos = await getTodos()
-  console.log(todos)
+  removeListElement()
   todos.forEach(todo => {
     const todoEl = createTodoElement(todo)
 
@@ -71,7 +72,10 @@ const createTodoElement = function ({ text, status, assignee, id }) {
   const checkBox = document.createElement("input")
   checkBox.classList.add("ms-2")
   checkBox.setAttribute("type", "checkbox")
-  checkBox.addEventListener("change", () => toggleTodo(id, { status: "done" }))
+  checkBox.addEventListener("change", async () => {
+    await toggleTodo(id, { status: "done" })
+    fetchAndFillTodos()
+  })
 
   const todoText = document.createElement("span")
   todoText.classList.add("flex-grow-1")
@@ -88,7 +92,10 @@ const createTodoElement = function ({ text, status, assignee, id }) {
   const deleteButton = document.createElement("img")
   deleteButton.setAttribute("src", "public/remove.svg")
   deleteButton.classList.add("me-1", "delete-btn")
-  deleteButton.addEventListener("click", () => deleteTodo(id))
+  deleteButton.addEventListener("click", async () => {
+    await deleteTodo(id)
+    fetchAndFillTodos()
+  })
 
   status !== "done" && todoEl.append(checkBox)
   todoEl.append(todoText)
