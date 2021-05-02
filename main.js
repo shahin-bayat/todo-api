@@ -64,13 +64,21 @@ const fetchAndFillTodos = async function () {
   })
 }
 
-const createTodoElement = function ({ text, status, assignee, id }) {
+const createTodoElement = function ({
+  text,
+  status,
+  assignee,
+  id,
+  created_at,
+}) {
   const todoEl = document.createElement("li")
-  todoEl.classList.add(`list-group-item`, "d-flex", "align-items-center")
+  status === "pending" &&
+    todoEl.classList.add(`list-group-item`, "todo-pending")
+  status === "done" && todoEl.classList.add(`list-group-item`, "todo-done")
   // status === "done" && todoEl.classList.add(`disabled`)
 
   const checkBox = document.createElement("input")
-  checkBox.classList.add("ms-2")
+  checkBox.classList.add("checkbox")
   checkBox.setAttribute("type", "checkbox")
   checkBox.addEventListener("change", async () => {
     await toggleTodo(id, { status: "done" })
@@ -78,20 +86,30 @@ const createTodoElement = function ({ text, status, assignee, id }) {
   })
 
   const todoText = document.createElement("span")
-  todoText.classList.add("flex-grow-1")
+  todoText.classList.add("text")
   todoText.append(text)
   if (status === "done") todoText.classList.add("done")
 
   const todoAssignee = document.createElement("span")
   todoAssignee.append(assignee)
-  todoAssignee.classList.add("badge", "rounded-fill")
+  todoAssignee.classList.add("badge", "rounded-fill", "assignee")
   assignee == "شاهین" && todoAssignee.classList.add("bg-primary")
   assignee == "شادی" && todoAssignee.classList.add("bg-warning")
   assignee == "مشترک" && todoAssignee.classList.add("bg-secondary")
 
+  const todoDate = document.createElement("span")
+  todoDate.classList.add("date")
+  const dateOptions = {
+    dateStyle: "short",
+    timeStyle: "short",
+  }
+  todoDate.append(
+    new Intl.DateTimeFormat("fa-IR", dateOptions).format(created_at)
+  )
+
   const deleteButton = document.createElement("img")
   deleteButton.setAttribute("src", "public/remove.svg")
-  deleteButton.classList.add("me-1", "delete-btn")
+  deleteButton.classList.add("delete-btn")
   deleteButton.addEventListener("click", async () => {
     await deleteTodo(id)
     fetchAndFillTodos()
@@ -99,6 +117,7 @@ const createTodoElement = function ({ text, status, assignee, id }) {
 
   status !== "done" && todoEl.append(checkBox)
   todoEl.append(todoText)
+  todoEl.append(todoDate)
   todoEl.append(todoAssignee)
   todoEl.append(deleteButton)
 

@@ -9,13 +9,14 @@ h1 {
   margin-bottom: 2rem;
 }
 h2 {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: bold;
 }
 
 .delete-btn {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0 1rem;
 }
 
 .delete-btn:hover {
@@ -27,6 +28,85 @@ h2 {
   color: rgb(156, 156, 156);
 }
 
+.date {
+  font-size: 0.9rem;
+  white-space: nowrap;
+  justify-self: start;
+}
+
 input[type="checkbox"] {
   cursor: pointer;
+}
+
+.todo-pending {
+  display: grid;
+  grid-template-columns: 2rem minmax(min-content, 1fr) 10rem min-content min-content;
+  align-items: center;
+  justify-items: start;
+}
+
+.todo-done {
+  display: grid;
+  grid-template-columns: minmax(min-content, 1fr) 10rem min-content min-content;
+  align-items: center;
+  justify-items: start;
+}
+.text {
+  font-size: 1rem;
+}
+
+.assignee {
+  font-size: 0.8rem;
+}
+
+@media screen and (max-width: 800px) {
+  .todo-pending {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    grid-auto-columns: 10rem;
+    row-gap: 1rem;
+    justify-items: start;
+    align-items: center;
+  }
+
+  .todo-done {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-columns: 10rem;
+    row-gap: 1rem;
+    justify-items: start;
+    align-items: center;
+  }
+
+  ul#todos,
+  ul#todos-done {
+    padding: 0;
+  }
+
+  .checkbox {
+    align-self: start;
+    margin-top: 0.2rem;
+  }
+
+  .text {
+    text-align: justify;
+  }
+
+  .date {
+    width: 100%;
+    grid-column: 1/3;
+    justify-self: start;
+  }
+  .assignee {
+    grid-row: 3/4;
+    grid-column: 2/3;
+    justify-self: end;
+  }
+
+  .delete-btn {
+    grid-row: 3/4;
+    grid-column: 1/2;
+    margin: 0;
+    display: none;
+  }
 }
